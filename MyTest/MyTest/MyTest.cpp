@@ -1,44 +1,58 @@
-// MyTest.cpp : ¶¨Òå¿ØÖÆÌ¨Ó¦ÓÃ³ÌĞòµÄÈë¿Úµã¡£
+ï»¿// MyTest.cpp : å®šä¹‰æ§åˆ¶å°åº”ç”¨ç¨‹åºçš„å…¥å£ç‚¹ã€‚
 //
-#include"stdafx.h"
+#include "stdafx.h"
 #include "highgui.h"
 #include "cv.h"
 #include <iostream>
 
-CvCapture *cap = NULL;
-int g_slider_position = 0;
-IplImage *frame;
-void play(CvCapture *);
-void onTracBarSlide(int);
+void saturate_sv(IplImage *);
+void drawROI(IplImage *);
+void doInvert(IplImage *, IplImage *);
 
-int main()
+int main() {
+	IplImage *pic = cvLoadImage("F:\\pic\\baboon.jpg");
+	IplImage *tmp = cvCreateImage(cvGetSize(pic),IPL_DEPTH_8U,1);
+	cvCvtColor(pic, tmp, CV_RGB2GRAY);
+	cvNamedWindow("MyWin1");
+	drawROI(tmp);
+	cvShowImage("MyWin1", tmp);
+	std::cout << pic->depth << std::endl;
+
+	doInvert(pic, pic);
+	cvNamedWindow("MyWin2");
+	cvShowImage("MyWin2", pic);
+
+	cvWaitKey(0);
+	cvReleaseImage(&tmp);
+	cvReleaseImage(&pic);
+	cvDestroyAllWindows();
+}
+
+void saturate_sv(IplImage *in)
 {
-	CvCapture *cap = cvCreateFileCapture("G:\\KwSingMV\\myx.avi");
-	cvNamedWindow("mycap");
-	int frames = (int)cvGetCaptureProperty(cap, CV_CAP_PROP_FRAME_COUNT);
-	std::cout << frames << std::endl;
-	if (frames != 0) {
-		cvCreateTrackbar("position", "mycap", &g_slider_position, frames, onTracBarSlide);
-	}
-	play(cap);
-	cvReleaseCapture(&cap);
-	cvDestroyWindow("mycap");
-}
-
-void onTracBarSlide(int pos) {
-	cvSetCaptureProperty(cap, CV_CAP_PROP_POS_FRAMES, pos);
-	std::cout << cvGetCaptureProperty(cap, CV_CAP_PROP_POS_FRAMES) << std::endl;
-}
-
-
-void play(CvCapture *cap) {
-	while (1) {
-		frame = cvQueryFrame(cap);
-		if (!frame) {
-			break;
+	int width = in->width;
+	int height = in->height;
+	for (int y = 50; y < 200; y++) {
+		uchar * ptr = (uchar *)(in->imageData + y*in->widthStep);
+		for (int x = 50; x < 200; x++) {
+			ptr[1 * x + 1] = ptr[1 * x + 1] + 120;
+			//ptr[3 * x + 2] = ptr[3 * x + 2] + 12;
+			//ptr[3 * x + 3] = ptr[3 * x + 3] + 80;
 		}
-		cvShowImage("mycap", frame);
-		char c = cvWaitKey(33);
-		if (c == 27) break;
 	}
+}
+void drawROI(IplImage *in)
+{
+	
+	cvRectangle(in, cvPoint(50, 50), cvPoint(200, 200), cvScalar(188,0,0), 2);
+	//cvSetImageROI(in, cvRect(50, 50, 150, 150));
+	saturate_sv(in);
+	//cvAddS(in, cvScalar(150,0,0), in);
+	//cvResetImageROI(in);
+}
+void doInvert(IplImage *src, IplImage *dst)
+{
+	int sWidth = src->width;
+	int sHeight = src->height;
+	CvSize sSize = cvGetSize(src);
 }
