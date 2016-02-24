@@ -9,7 +9,7 @@ void saturate_sv(IplImage *, int);
 void drawROI(IplImage *);
 void doInvert(IplImage *, IplImage *);
 
-int main() {
+int test() {
 	IplImage *pic = cvLoadImage("F:\\pic\\baboon.jpg");
 	IplImage *grayImg = cvCreateImage(cvGetSize(pic),IPL_DEPTH_8U,1);
 	IplImage *fullImg = cvCreateImage(cvGetSize(pic), pic->depth, 3);
@@ -33,6 +33,7 @@ int main() {
 	cvReleaseImage(&fullImg);
 	cvReleaseImage(&pic);
 	cvDestroyAllWindows();
+	return 0;
 }
 
 void saturate_sv(IplImage *in,int code)

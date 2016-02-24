@@ -1,35 +1,14 @@
 // MyTest.cpp : 定义控制台应用程序的入口点。
 //
 #include "stdafx.h"
-#include "highgui.h"
-#include "cv.h"
-#include <iostream>
+#include "draw.h"
 
-void myMouseCallback(int, int, int, int, void *);
 CvRect box;
 bool drawing_box = false;
+
 void draw_box(IplImage *img, CvRect rect)
 {
 	cvRectangle(img, cvPoint(rect.x, rect.y), cvPoint(rect.x + rect.width, rect.y + rect.height), cvScalar(255, 0, 0));
-}
-
-int main() {
-	box = cvRect(-1, -1, 0, 0);
-	IplImage *pic = cvLoadImage("F:\\pic\\123.jpg");
-	IplImage *tmp = cvCloneImage(pic);
-	cvNamedWindow("Win0");
-	cvSetMouseCallback("Win0", myMouseCallback, (void *)pic);
-	while (true) {
-		cvCopy(pic, tmp);
-		if (drawing_box) draw_box(tmp, box);
-		cvShowImage("Win0", tmp);
-		if (cvWaitKey(15) == 27) {
-			break;
-		}
-	}
-	cvReleaseImage(&pic);
-	cvReleaseImage(&tmp);
-	cvDestroyAllWindows();
 }
 
 void myMouseCallback(int event, int x, int y, int flag, void * param)
@@ -62,4 +41,24 @@ void myMouseCallback(int event, int x, int y, int flag, void * param)
 		draw_box(image, box);
 	}break;
 	}
+}
+
+int draw() {
+	box = cvRect(-1, -1, 0, 0);
+	IplImage *pic = cvLoadImage("F:\\pic\\123.jpg");
+	IplImage *tmp = cvCloneImage(pic);
+	cvNamedWindow("Win0");
+	cvSetMouseCallback("Win0", myMouseCallback, (void *)pic);
+	while (true) {
+		cvCopy(pic, tmp);
+		if (drawing_box) draw_box(tmp, box);
+		cvShowImage("Win0", tmp);
+		if (cvWaitKey(15) == 27) {
+			break;
+		}
+	}
+	cvReleaseImage(&pic);
+	cvReleaseImage(&tmp);
+	cvDestroyAllWindows();
+	return 0;
 }
