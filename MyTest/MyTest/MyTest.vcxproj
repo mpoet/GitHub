@@ -150,6 +150,7 @@
     <ClInclude Include="draw.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="threshold.h" />
     <ClInclude Include="video.h" />
   </ItemGroup>
   <ItemGroup>
@@ -157,6 +158,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MyTest.cpp" />
     <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="threshold.cpp" />
     <ClCompile Include="video.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
